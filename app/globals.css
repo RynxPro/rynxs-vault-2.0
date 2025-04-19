@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #73e2ff;
   --foreground: #171717;
 }
 
@@ -11,22 +11,52 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #171717;
-    --foreground: #ededed;
-  }
 }
 
 @layer utility {
   .bg-paper {
     @apply bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')];
   }
+
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+
+  /* typography */
+  .text-30-extrabold {
+    @apply text-[30px] font-extrabold text-white;
+  }
+  .text-30-bold {
+    @apply text-[30px] font-bold text-black;
+  }
+  .text-30-semibold {
+    @apply font-semibold text-[30px] text-black;
+  }
+  .text-26-semibold {
+    @apply font-semibold text-[26px] text-black;
+  }
+  .text-24-black {
+    @apply text-[24px] font-black text-black;
+  }
+  .text-20-medium {
+    @apply font-medium text-[20px] text-black;
+  }
+  .text-16-medium {
+    @apply font-medium text-[16px] text-black;
+  }
+  .text-14-normal {
+    @apply font-normal text-sm text-white;
+  }
+
   /* buttons */
   .login-btn {
-    @apply flex items-center gap-3 bg-primary text-black font-bold px-5 py-2 rounded-full hover:bg-pink-500 transition-transform duration-200 hover:scale-105 border-5 border-black;
+    @apply flex items-center gap-3 bg-primary text-black font-bold px-5 py-2 rounded-full hover:bg-pink-500 transition-transform duration-200 hover:scale-105 border-5 border-black cursor-pointer;
   }
   .logout-btn {
     @apply flex items-center gap-3 bg-white text-black font-bold px-5 py-2 rounded-full hover:bg-red-500 transition-transform duration-200 hover:scale-105 border-5 border-black;
+  }
+  .profile-btn {
+    @apply flex items-center bg-white text-black font-bold px-5 py-2 rounded-full transition-transform duration-200 hover:scale-105 border-5 border-black;
   }
 
   .heading {
@@ -36,7 +66,16 @@
     @apply font-bold text-[23px] text-black max-w-2xl text-center break-words;
   }
   .main_container {
-    @apply w-full bg-[#f4995d] min-h-[530px] flex justify-center items-center flex-col py-10 px-6 border-b-6 border-black;
+    @apply w-full bg-[#f4995d] min-h-[530px] flex justify-center items-center flex-col py-10 px-6 border-b-5 border-black;
+  }
+  .section_container {
+    @apply px-6 py-10 max-w-7xl mx-auto;
+  }
+  .card_grid {
+    @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5;
+  }
+  .card_grid-sm {
+    @apply grid sm:grid-cols-2 gap-5;
   }
 
   /* searchform */
@@ -48,6 +87,26 @@
   }
   .search-btn {
     @apply size-[50px] rounded-full bg-black flex justify-center items-center;
+  }
+
+  /* gamecards */
+  .game-card {
+    @apply bg-white border-[3px] border-black border-t-[5px] border-l-[5px] border-b-[8px] border-r-[8px] py-6 px-5 rounded-[22px] shadow-2xl hover:border-[#ff57b4] transition-all duration-500 hover:shadow-2xl hover:bg-white;
+  }
+  .game-card_date {
+    @apply font-medium text-[16px] bg-white px-4 py-2 rounded-full group-hover:bg-white;
+  }
+  .game-card_desc {
+    @apply font-normal text-[16px] line-clamp-2 my-3 text-black break-all;
+  }
+  .game-card_img {
+    @apply w-full h-[164px] rounded-[10px] object-cover;
+  }
+  .game-card_btn {
+    @apply rounded-full bg-black font-medium text-[16px] text-white px-5 py-3;
+  }
+  .game-card_skeleton {
+    @apply w-full h-96 rounded-[22px] bg-zinc-400;
   }
 }
 

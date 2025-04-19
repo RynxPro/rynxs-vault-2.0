@@ -8,7 +8,7 @@ const Navbar = async () => {
   const session = await auth();
 
   return (
-    <header className="px-5 py-1 bg-[#73e2ff] shadow-md font-work-sans border-b-6 border-black">
+    <header className="px-5 py-1 bg-[#73e2ff] shadow-md font-work-sans border-b-5 border-black">
       <nav className="flex justify-between items-center">
         <Link href="/">
           <Image src="/logo.png" alt="logo" width={150} height={30} />
@@ -34,9 +34,7 @@ const Navbar = async () => {
               </form>
 
               <Link href={`/user/${session?.user?.id}`}>
-                <span className="bg-white text-black px-3 py-1 rounded-full font-semibold">
-                  {session?.user?.name}
-                </span>
+                <span className="profile-btn">{session?.user?.name}</span>
               </Link>
             </>
           ) : (
