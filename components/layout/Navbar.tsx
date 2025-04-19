@@ -28,10 +28,7 @@ const Navbar = async () => {
                   await signOut({ redirectTo: "/" });
                 }}
               >
-                <button
-                  className="flex items-center gap-2 bg-yellow-300 text-black font-bold px-5 py-2 rounded-full hover:bg-yellow-400 transition-all duration-200"
-                  type="submit"
-                >
+                <button className="logout-btn" type="submit">
                   Logout
                 </button>
               </form>
@@ -50,10 +47,7 @@ const Navbar = async () => {
                 await signIn("github");
               }}
             >
-              <button
-                className="flex items-center gap-3 bg-[#ff57b4] text-black font-bold px-5 py-2 rounded-full hover:bg-pink-500 transition-transform duration-200 hover:scale-105 border-5 border-black"
-                type="submit"
-              >
+              <button className="login-btn" type="submit">
                 Login
                 <BsGithub className="text-3xl flex" />
               </button>

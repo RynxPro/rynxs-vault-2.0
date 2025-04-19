@@ -6,16 +6,48 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: #ff57b4;
+  --color-secondary: #73e2ff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #171717;
     --foreground: #ededed;
+  }
+}
+
+@layer utility {
+  .bg-paper {
+    @apply bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')];
+  }
+  /* buttons */
+  .login-btn {
+    @apply flex items-center gap-3 bg-primary text-black font-bold px-5 py-2 rounded-full hover:bg-pink-500 transition-transform duration-200 hover:scale-105 border-5 border-black;
+  }
+  .logout-btn {
+    @apply flex items-center gap-3 bg-white text-black font-bold px-5 py-2 rounded-full hover:bg-red-500 transition-transform duration-200 hover:scale-105 border-5 border-black;
+  }
+
+  .heading {
+    @apply uppercase bg-black px-6 py-3 font-extrabold text-white sm:text-[54px] sm:leading-[64px] text-[36px] leading-[46px] max-w-5xl text-center my-5;
+  }
+  .sub-heading {
+    @apply font-bold text-[23px] text-black max-w-2xl text-center break-words;
+  }
+  .main_container {
+    @apply w-full bg-[#f4995d] min-h-[530px] flex justify-center items-center flex-col py-10 px-6 border-b-6 border-black;
+  }
+
+  /* searchform */
+  .search-form {
+    @apply max-w-3xl w-full min-h-[80px] bg-white border-[5px] border-black rounded-[80px] text-[24px] mt-8 px-5 flex flex-row items-center gap-5;
+  }
+  .search-input {
+    @apply flex-1 font-bold placeholder:font-bold placeholder:text-gray-800 w-full h-auto outline-none;
+  }
+  .search-btn {
+    @apply size-[50px] rounded-full bg-black flex justify-center items-center;
   }
 }
 
