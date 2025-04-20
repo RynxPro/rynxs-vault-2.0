@@ -5,3 +5,15 @@ export function formatDate(date: string) {
     year: "numeric",
   });
 }
+
+export function formatFollowNumber(number: number) {
+  return number.toLocaleString("en-US");
+}
+
+export function formatViewNumber(number: number) {
+  if (number < 1000) return number.toString();
+  if (number < 10000)
+    return (number / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  if (number < 1000000) return Math.floor(number / 1000) + "K";
+  return (number / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+}
