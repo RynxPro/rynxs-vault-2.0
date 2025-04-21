@@ -2,6 +2,7 @@ import { formatDate, formatFollowNumber, formatViewNumber } from "@/lib/utils";
 import { EyeIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
 
 const GameCard = ({ post }: { post: GameCardType }) => {
   const {
@@ -60,7 +61,11 @@ const GameCard = ({ post }: { post: GameCardType }) => {
 
       <Link href={`/game/${_id}`}>
         <p className="game-card_desc">{description}</p>
-        <img src={image} alt="placeholder" className="game-card_img" />
+        <img
+          src={urlFor(image).width(600).url()}
+          alt={title}
+          className="game-card_img"
+        />
       </Link>
 
       <div className="flex-between mt-5 gap-3">
