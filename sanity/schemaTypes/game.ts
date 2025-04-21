@@ -41,8 +41,11 @@ export const game = defineType({
     }),
     defineField({
       name: "image",
-      type: "url",
-      validation: (Rule) => Rule.required(),
+      type: "image",
+      title: "Image",
+      options: {
+        hotspot: true, // if you want image focus/crop support
+      },
     }),
     defineField({
       name: "pitch",
