@@ -7,6 +7,7 @@
 
 @theme inline {
   --color-primary: #ff57b4;
+  --color-primary-100: #ffe8f0;
   --color-secondary: #73e2ff;
 }
 
@@ -91,7 +92,7 @@
 
   /* gamecards */
   .game-card {
-    @apply bg-white border-[3px] border-black border-t-[5px] border-l-[5px] border-b-[10px] border-r-[10px] py-6 px-5 rounded-[22px] shadow-2xl hover:border-[#ff57b4] transition-all duration-500 hover:shadow-2xl hover:bg-white;
+    @apply bg-white border-[3px] border-black border-t-[5px] border-l-[5px] border-b-[10px] border-r-[10px] py-6 px-5 rounded-[22px] shadow-2xl hover:border-black transition-all duration-500 hover:shadow-2xl hover:bg-primary-100;
   }
   .game-card_date {
     @apply font-medium text-[16px] bg-white px-4 py-2 rounded-full group-hover:bg-white;
