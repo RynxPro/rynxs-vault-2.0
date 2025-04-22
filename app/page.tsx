@@ -1,8 +1,8 @@
 import Image from "next/image";
 import SearchForm from "@/components/ui/SearchForm";
 import GameCard, { GameCardType } from "@/components/ui/GameCard";
-import { client } from "@/sanity/lib/client";
 import { GAMES_QUERY } from "@/sanity/lib/queries";
+import { sanityFetch } from "@/sanity/lib/live";
 
 export default async function Home({
   searchParams,
@@ -11,7 +11,7 @@ export default async function Home({
 }) {
   const query = (await searchParams).query;
 
-  const posts = await client.fetch(GAMES_QUERY);
+  const { data: posts } = await sanityFetch({ query: GAMES_QUERY });
 
   return (
     <>
