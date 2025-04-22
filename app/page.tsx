@@ -1,6 +1,6 @@
 import Image from "next/image";
 import SearchForm from "@/components/ui/SearchForm";
-import GameCard from "@/components/ui/GameCard";
+import GameCard, { GameCardType } from "@/components/ui/GameCard";
 import { client } from "@/sanity/lib/client";
 import { GAMES_QUERY } from "@/sanity/lib/queries";
 

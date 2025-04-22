@@ -3,13 +3,16 @@ import { EyeIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { Author, Game } from "@/sanity/types";
+
+export type GameCardType = Omit<Game, "author"> & { author?: Author };
 
 const GameCard = ({ post }: { post: GameCardType }) => {
   const {
     _createdAt,
     views,
     followers,
-    author: { _id: authorId, name },
+    author,
     title,
     category,
     _id,
@@ -39,8 +42,8 @@ const GameCard = ({ post }: { post: GameCardType }) => {
 
       <div className="flex-between mt-5 gap-5">
         <div className="flex-1">
-          <Link href={`/user/${authorId}`}>
-            <p className="text-16-medium line-clamp-1">{name}</p>
+          <Link href={`/user/${author?._id}`}>
+            <p className="text-16-medium line-clamp-1">{author?.name}</p>
           </Link>
 
           <Link href={`/game/${_id}`}>
@@ -48,7 +51,7 @@ const GameCard = ({ post }: { post: GameCardType }) => {
           </Link>
         </div>
 
-        <Link href={`/user/${authorId}`}>
+        <Link href={`/user/${author?._id}`}>
           <Image
             src="https://placehold.co/48x48"
             alt="placeholder"
@@ -69,7 +72,7 @@ const GameCard = ({ post }: { post: GameCardType }) => {
       </Link>
 
       <div className="flex-between mt-5 gap-3">
-        <Link href={`/?query=${category.toLowerCase()}`}>
+        <Link href={`/?query=${category?.toLowerCase()}`}>
           <p className="text-16-medium">{category}</p>
         </Link>
         <button className="game-card_btn">
