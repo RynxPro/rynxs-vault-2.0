@@ -5,6 +5,9 @@ import { formatDate } from "@/lib/utils";
 import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
 import Image from "next/image";
+import { BellRingIcon } from "lucide-react";
+import dynamic from "next/dynamic";
+const PostList = dynamic(() => import("@/components/ui/PostList"));
 
 const page = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -21,16 +24,16 @@ const page = async ({ params }: { params: { id: string } }) => {
         <p className="sub-heading !max-w-5xl">{game.description}</p>
       </section>
 
-      <section className="section_container bg-paper mt-10 bg-amber-100 rounded-2xl">
+      <section className="section_container bg-paper mt-10 bg-third border-black border-5 rounded-2xl">
         <div className="flex justify-center">
           <img
             src={urlFor(game.image).url()}
             alt="thumbnail"
-            className="w-[500] max-h-700 rounded-xl"
+            className="w-[500] max-h-700 rounded-xl border-4 border-black p-2 bg-secondary shadow-2xs shadow-black"
           />
         </div>
 
-        <div className="space-y-5 mt-10 max-w-4xl mx-auto">
+        <div className="space-y-5 mt-10 max-w-4xl border-black border-5 bg-secondary rounded-2xl mx-auto p-6 shadow-xl ring-1 ring-black/10">
           <div className="flex-between gap-5">
             <Link
               href={`/user/${game.author?._id}`}
@@ -52,14 +55,25 @@ const page = async ({ params }: { params: { id: string } }) => {
               </div>
             </Link>
 
-            <p className="category-tag">{game.category}</p>
+            <p className="category-tag flex items-center ">
+              Follow
+              <BellRingIcon />
+            </p>
           </div>
-
-          <h3 className="text-30-bold">Posts</h3>
         </div>
       </section>
 
-      <section></section>
+      <section className="max-w-7xl mx-auto flex flex-row gap-10">
+        <div className="top-posts bg-third mt-10 rounded-2xl p-6 border-black border-5 w-3xl">
+          <h2 className="heading">Posts</h2>
+          <PostList posts={posts} />
+        </div>
+        <div className="posts max-h-100  bg-third mt-10 rounded-2xl p-6 border-black border-5">
+          <h2 className="heading">Top Posts</h2>
+          <h2 className="heading">Coming Soon</h2>
+          <p>sorry lol</p>
+        </div>
+      </section>
     </>
   );
 };

@@ -9,13 +9,28 @@ export const GAMES_QUERY =
         author->{
         name,
         username,
-        image
+        image,
+        followers
         },
         views,
         followers,
         description,
         category,
-        image
+        image,
+        comments[] {
+          author->{
+            name,
+            username
+          },
+          comment,
+          createdAt
+        },
+        likes[] {
+          author->{
+            name,
+            username
+          }
+        }
     }`);
 
 export const GAME_BY_ID_QUERY = `
@@ -27,13 +42,28 @@ export const GAME_BY_ID_QUERY = `
     author->{
       name,
       username,
-      image
+      image,
+      followers
     },
     views,
     followers,
     description,
     category,
-    image
+    image,
+    comments[] {
+      author->{
+        name,
+        username
+      },
+      comment,
+      createdAt
+    },
+    likes[] {
+      author->{
+        name,
+        username
+      }
+    }
   }
 `;
 
@@ -44,6 +74,20 @@ export const POSTS_BY_GAME_QUERY = `
     slug,
     image,
     content,
-    _createdAt
+    _createdAt,
+    comments[] {
+      author->{
+        name,
+        username
+      },
+      comment,
+      createdAt
+    },
+    likes[] {
+      author->{
+        name,
+        username
+      }
+    }
   }
 `;

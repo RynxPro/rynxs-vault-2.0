@@ -44,6 +44,38 @@ export const post = defineType({
       },
     }),
     defineField({
+      name: "comments",
+      type: "array",
+      title: "Comments",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "author",
+              type: "reference",
+              to: [{ type: "author" }],
+              title: "Author",
+            },
+            { name: "comment", type: "text", title: "Comment" },
+            {
+              name: "createdAt",
+              type: "datetime",
+              title: "Commented At",
+              initialValue: () => new Date().toISOString(),
+              readOnly: true,
+            },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "likes",
+      type: "array",
+      title: "Likes",
+      of: [{ type: "reference", to: [{ type: "author" }] }],
+    }),
+    defineField({
       name: "createdAt",
       type: "datetime",
       title: "Date Created",

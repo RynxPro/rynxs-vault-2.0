@@ -35,6 +35,13 @@ export const author = defineType({
       name: "bio",
       type: "text",
     }),
+    defineField({
+      name: "followers",
+      title: "Followers",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "author" }] }],
+      description: "List of authors who follow this author",
+    }),
   ],
   preview: {
     select: {

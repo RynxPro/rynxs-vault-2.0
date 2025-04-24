@@ -11,7 +11,7 @@
   --color-secondary: #f4efe7;
   --color-forth: #f6f0f0;
   --color-third: #c6e7ff;
-  --color-dark: #4a637d;
+  --color-dark: #9fb3df;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -125,7 +125,7 @@
 
   /* gamecards */
   .game-card {
-    @apply bg-white border-[3px] border-black border-t-[5px] border-l-[5px] border-b-[10px] border-r-[10px] py-6 px-5 rounded-[22px] shadow-2xl transition-all duration-500 hover:shadow-2xl hover:scale-105;
+    @apply bg-white border-[3px] border-black border-t-[5px] border-l-[5px] border-b-[10px] border-r-[10px] py-6 px-5 rounded-[22px] shadow-2xl transition-all duration-500 hover:shadow-2xl hover:scale-103;
   }
   .game-card_date {
     @apply font-medium text-[16px] bg-white px-4 py-2 rounded-full group-hover:bg-white;
@@ -151,7 +151,7 @@
     @apply font-medium text-[16px] bg-primary-100 px-4 py-2 rounded-lg capitalize;
   }
   .category-tag {
-    @apply font-medium text-[16px] bg-primary-100 px-4 py-2 rounded-full;
+    @apply font-medium text-[16px] bg-primary border-5 border-black px-4 py-2 rounded-full;
   }
 }
 
