@@ -8,6 +8,7 @@ export const GAMES_QUERY =
         slug,
         author->{
         name,
+        username,
         image
         },
         views,
@@ -16,3 +17,33 @@ export const GAMES_QUERY =
         category,
         image
     }`);
+
+export const GAME_BY_ID_QUERY = `
+  *[_type == "game" && _id == $id][0] {
+    _id,
+    title,
+    _createdAt,
+    slug,
+    author->{
+      name,
+      username,
+      image
+    },
+    views,
+    followers,
+    description,
+    category,
+    image
+  }
+`;
+
+export const POSTS_BY_GAME_QUERY = `
+  *[_type == "post" && game._ref == $gameId] | order(_createdAt desc) {
+    _id,
+    title,
+    slug,
+    image,
+    content,
+    _createdAt
+  }
+`;

@@ -8,13 +8,13 @@ const Navbar = async () => {
   const session = await auth();
 
   return (
-    <header className="px-5 py-1 bg-[#73e2ff] shadow-md font-work-sans border-b-5 border-black">
+    <header className="bg-secondary px-5 py-1 shadow-md font-work-sans border-b-5 border-black">
       <nav className="flex justify-between items-center">
         <Link href="/">
           <Image src="/logo.png" alt="logo" width={150} height={30} />
         </Link>
 
-        <div className="flex items-center gap-5 text-black">
+        <div className="flex items-center gap-5">
           {session && session?.user ? (
             <>
               <Link href={"/games/upload"}>
@@ -45,9 +45,9 @@ const Navbar = async () => {
                 await signIn("github");
               }}
             >
-              <button className="login-btn" type="submit">
+              <button className="!text-secondary login-btn" type="submit">
                 Login
-                <BsGithub className="text-3xl flex" />
+                <BsGithub className="text-3xl flex text-secondary" />
               </button>
             </form>
           )}

@@ -25,7 +25,11 @@ export const author = defineType({
     }),
     defineField({
       name: "image",
-      type: "url",
+      type: "image",
+      title: "Image",
+      options: {
+        hotspot: true, // if you want image focus/crop support
+      },
     }),
     defineField({
       name: "bio",
@@ -35,6 +39,7 @@ export const author = defineType({
   preview: {
     select: {
       title: "name",
+      media: "image",
     },
   },
 });
