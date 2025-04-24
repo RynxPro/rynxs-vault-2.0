@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BellRingIcon } from "lucide-react";
 import dynamic from "next/dynamic";
-const PostList = dynamic(() => import("@/components/ui/PostList"));
+import PostList from "@/components/ui/PostList";
 
 const page = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
