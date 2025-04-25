@@ -95,6 +95,24 @@ export type Post = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  comments?: Array<{
+    author?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "author";
+    };
+    comment?: string;
+    createdAt?: string;
+    _key: string;
+  }>;
+  likes?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "author";
+  }>;
   createdAt?: string;
 };
 
@@ -160,6 +178,13 @@ export type Author = {
     _type: "image";
   };
   bio?: string;
+  followers?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "author";
+  }>;
 };
 
 export type SanityImageCrop = {

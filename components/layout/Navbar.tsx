@@ -17,7 +17,7 @@ const Navbar = async () => {
         <div className="flex items-center gap-5">
           {session && session?.user ? (
             <>
-              <Link href={"/games/upload"}>
+              <Link href={"/game/upload"}>
                 <span>Upload</span>
               </Link>
 

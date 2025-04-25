@@ -27,20 +27,28 @@ const page = async ({ params }: { params: { id: string } }) => {
       <section className="section_container bg-paper mt-10 bg-third border-black border-5 rounded-2xl">
         <div className="flex justify-center">
           <img
-            src={urlFor(game.image).url()}
+            src={
+              game.author.image
+                ? urlFor(game.image).url()
+                : "/default-avatar.png"
+            }
             alt="thumbnail"
-            className="w-[500] max-h-700 rounded-xl border-4 border-black p-2 bg-secondary shadow-2xs shadow-black"
+            className="w-[500] max-h-700 rounded-xl border-4 border-black p-2 bg-white shadow-2xs shadow-black"
           />
         </div>
 
-        <div className="space-y-5 mt-10 max-w-4xl border-black border-5 bg-secondary rounded-2xl mx-auto p-6 shadow-xl ring-1 ring-black/10">
+        <div className="space-y-5 mt-10 max-w-4xl border-black border-5 bg-white rounded-2xl mx-auto p-6 shadow-xl ring-1 ring-black/10">
           <div className="flex-between gap-5">
             <Link
               href={`/user/${game.author?._id}`}
               className="flex gap-2 items-center mb-3"
             >
               <Image
-                src={urlFor(game.author.image).url()}
+                src={
+                  urlFor(game.author.image)
+                    ? urlFor(game.author.image).url()
+                    : "/default-avatar.png"
+                }
                 alt="avatar"
                 width={64}
                 height={64}
@@ -70,7 +78,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         </div>
         <div className="posts max-h-100  bg-third mt-10 rounded-2xl p-6 border-black border-5">
           <h2 className="heading">Top Posts</h2>
-          <h2 className="heading">Coming Soon</h2>
+          <h2 className="heading">Coming Soon...</h2>
           <p>sorry lol</p>
         </div>
       </section>

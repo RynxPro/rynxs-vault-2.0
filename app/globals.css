@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4efe7;
+  --background: #f8efef;
   --foreground: #171717;
 }
 
@@ -27,7 +27,7 @@
   }
 
   .tag {
-    @apply bg-secondary font-bold rounded-sm uppercase relative border-5 border-black;
+    @apply bg-white font-bold rounded-sm uppercase relative border-5 border-black;
     padding: 12px 24px; /* Increase padding to create more space */
     box-sizing: content-box; /* Ensure the padding doesn't affect the border */
   }
