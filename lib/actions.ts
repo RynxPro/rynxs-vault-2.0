@@ -14,18 +14,18 @@ export const createGame = async (state: any, form: FormData, pitch: string) => {
       status: "ERROR",
     });
 
-  const { title, description, category, link } = Object.fromEntries(
+  const { title, description, category, image } = Object.fromEntries(
     Array.from(form).filter(([key]) => key !== "pitch")
   );
 
   const slug = slugify(title as string, { lower: true, strict: true });
 
   try {
-    const startup = {
+    const game = {
       title,
       description,
       category,
-      image: link,
+      image,
       slug: {
         _type: slug,
         current: slug,
@@ -34,10 +34,9 @@ export const createGame = async (state: any, form: FormData, pitch: string) => {
         _type: "reference",
         _ref: session?.id,
       },
-      pitch,
     };
 
-    const result = await writeClient.create({ _type: "startup", ...startup });
+    const result = await writeClient.create({ _type: "game", ...game });
 
     return parseServerActionResponse({
       ...result,

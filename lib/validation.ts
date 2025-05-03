@@ -13,7 +13,5 @@ export const formSchema = z.object({
     .string()
     .min(3, "Category must be at least 3 characters")
     .max(20, "Category must be less than 20 characters"),
-  image: z.instanceof(File).refine((file) => file instanceof File, {
-    message: "Image is required",
-  }),
+  image: z.string().min(1, "Image is required"),
 });

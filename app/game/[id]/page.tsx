@@ -14,6 +14,13 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   // Fetch game and posts data
   const game = await client.fetch(GAME_BY_ID_QUERY, { id });
+  if (!game) {
+    return (
+      <section className="main_container bg-paper">
+        <h1 className="heading">Game not found</h1>
+      </section>
+    );
+  }
   const posts = await client.fetch(POSTS_BY_GAME_QUERY, { gameId: id });
 
   return (

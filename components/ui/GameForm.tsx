@@ -110,18 +110,18 @@ const GameForm = () => {
       </div>
 
       <div>
-        <label htmlFor="link" className="game-form_label">
+        <label htmlFor="image" className="game-form_label">
           Image URL
         </label>
         <Input
-          id="link"
-          name="link"
+          id="image"
+          name="image"
           className="game-form_input"
           required
           placeholder="Game Image URL"
         />
 
-        {errors.link && <p className="game-form_error">{errors.link}</p>}
+        {errors.image && <p className="game-form_error">{errors.image}</p>}
       </div>
 
       <button

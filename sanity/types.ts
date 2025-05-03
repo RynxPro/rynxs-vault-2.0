@@ -192,6 +192,7 @@ export type Game = {
   description?: string;
   category?: string;
   image?: string;
+  pitch?: string;
 };
 
 export type Slug = {
@@ -212,13 +213,6 @@ export type Author = {
   email?: string;
   image?: string;
   bio?: string;
-  followers?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "author";
-  }>;
 };
 
 export type Markdown = string;
