@@ -7,6 +7,7 @@ export const GAMES_QUERY =
         _createdAt,
         slug,
         author->{
+        _id,
         name,
         username,
         image,
@@ -103,3 +104,48 @@ export const AUTHOR_BY_GITHUB_ID_QUERY = defineQuery(`
       bio
   }
   `);
+
+export const AUTHOR_BY_ID_QUERY = defineQuery(`
+    *[_type == "author" && _id == $id][0]{
+        _id,
+        id,
+        name,
+        username,
+        email,
+        image,
+        bio
+    }
+    `);
+
+export const GAMES_BY_AUTHOR_QUERY =
+  defineQuery(`*[_type == "game" && author._ref ==$id] | order(_createdAt desc) {
+        _id,
+        title,
+        _createdAt,
+        slug,
+        author->{
+        name,
+        username,
+        image,
+        followers
+        },
+        views,
+        followers,
+        description,
+        category,
+        image,
+        comments[] {
+          author->{
+            name,
+            username
+          },
+          comment,
+          createdAt
+        },
+        likes[] {
+          author->{
+            name,
+            username
+          }
+        }
+    }`);

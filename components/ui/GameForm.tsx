@@ -25,7 +25,7 @@ const GameForm = () => {
 
       await formSchema.parseAsync(formValues);
 
-      const pitch = formData.get("pitch") as string; // Assuming pitch is part of the form data
+      const pitch = formData.get("pitch") as string;
       const result = await createGame(prevState, formData, pitch);
 
       if (result.status === "SUCCESS") {

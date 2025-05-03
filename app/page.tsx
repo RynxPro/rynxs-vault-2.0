@@ -17,6 +17,7 @@ export default async function Home({
   console.log(session?.id);
 
   const { data: posts } = await sanityFetch({ query: GAMES_QUERY, params });
+  console.log(posts);
 
   return (
     <>

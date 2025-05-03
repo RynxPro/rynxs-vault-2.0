@@ -8,6 +8,7 @@ import DarkModeToggle from "../ui/DarkModeToggle";
 
 const Navbar = async () => {
   const session = await auth();
+  console.log(session);
 
   return (
     <header className="bg-background px-5 py-1 shadow-md font-work-sans border-b-3 border-black">
@@ -38,7 +39,7 @@ const Navbar = async () => {
                 </button>
               </form>
 
-              <Link href={`/user/${session?.user?.id}`}>
+              <Link href={`/user/${session?.id}`}>
                 <span className="profile-btn">{session?.user?.name}</span>
                 <img
                   src={session?.user?.image || "/default-avatar.png"}
