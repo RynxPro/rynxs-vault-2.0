@@ -36,7 +36,7 @@ function PostItem({ post }: { post: any }) {
   const parsedContent = md.render(post.content);
 
   return (
-    <div className="bg-white border-4 border-black rounded-2xl overflow-hidden shadow-xl w-full transition-transform hover:scale-[1.01] hover:shadow-2xl text-gray-800">
+    <div className="bg-white border-3 border-black rounded-2xl overflow-hidden shadow-xl w-full transition-transform hover:scale-[1.01] hover:shadow-2xl text-gray-800">
       <div className="flex justify-between items-center px-4 py-2 text-sm text-gray-500">
         <span>{formatDate(post._createdAt)}</span>
       </div>
@@ -61,7 +61,7 @@ function PostItem({ post }: { post: any }) {
         )}
       </div>
 
-      <div className="flex justify-start gap-10 px-4 sm:px-6 md:px-8 lg:px-10 py-4 text-base text-gray-700 border-t border-gray-300 font-medium">
+      <div className="flex justify-start gap-10 px-4 sm:px-6 md:px-8 lg:px-10 py-4 text-base text-gray-700 border-t-2 border-gray-300 font-medium">
         <div
           className="flex items-center gap-2 hover:text-red-500 cursor-pointer transition-transform hover:scale-110"
           title="Like post"
@@ -92,7 +92,7 @@ function PostItem({ post }: { post: any }) {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="px-6 py-4 bg-gray-50 border-t border-gray-200 space-y-4 overflow-hidden"
+            className="px-6 py-4 bg-gray-50 border-t-2 border-gray-200 space-y-4 overflow-hidden"
           >
             {post.comments?.map((comment: any, index: number) => (
               <div key={index} className="p-3 rounded-lg bg-white shadow">

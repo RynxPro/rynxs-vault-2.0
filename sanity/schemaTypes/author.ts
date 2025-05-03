@@ -25,28 +25,16 @@ export const author = defineType({
     }),
     defineField({
       name: "image",
-      type: "image",
-      title: "Image",
-      options: {
-        hotspot: true, // if you want image focus/crop support
-      },
+      type: "url",
     }),
     defineField({
       name: "bio",
       type: "text",
     }),
-    defineField({
-      name: "followers",
-      title: "Followers",
-      type: "array",
-      of: [{ type: "reference", to: [{ type: "author" }] }],
-      description: "List of authors who follow this author",
-    }),
   ],
   preview: {
     select: {
       title: "name",
-      media: "image",
     },
   },
 });

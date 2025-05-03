@@ -21,7 +21,7 @@ const GameCard = ({ post }: { post: GameCardType }) => {
   } = post;
 
   return (
-    <li className="game-card group">
+    <li className="game-card fade-in group">
       <div className="flex-between">
         <p className="game_card_date">{formatDate(_createdAt)}</p>
 
@@ -52,9 +52,9 @@ const GameCard = ({ post }: { post: GameCardType }) => {
         </div>
 
         <Link href={`/user/${author?._id}`}>
-          <Image
-            src="https://placehold.co/48x48"
-            alt="placeholder"
+          <img
+            src={author?.image!}
+            alt={author?.name!}
             width={48}
             height={48}
             className="rounded-full"
@@ -64,11 +64,8 @@ const GameCard = ({ post }: { post: GameCardType }) => {
 
       <Link href={`/game/${_id}`}>
         <p className="game-card_desc">{description}</p>
-        <img
-          src={urlFor(image).width(600).url()}
-          alt={title}
-          className="game-card_img"
-        />
+
+        <img src={image} alt="placeholder" className="game-card_img" />
       </Link>
 
       <div className="flex-between mt-5 gap-3">

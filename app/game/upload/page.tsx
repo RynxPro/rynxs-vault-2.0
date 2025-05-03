@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { GameForm } from "@/components/ui/GameForm";
+import GameForm from "@/components/ui/GameForm";
 
 const Page = async () => {
   const session = await auth();

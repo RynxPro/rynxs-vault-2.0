@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import { SanityLive } from "@/sanity/lib/live";
+import { Toaster } from "sonner";
 import "./globals.css";
 import "easymde/dist/easymde.min.css";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         <SanityLive />
         <Navbar />
         {children}
+        <Toaster />
       </body>
     </html>
   );

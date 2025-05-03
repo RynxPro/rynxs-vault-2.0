@@ -3,22 +3,27 @@ import React from "react";
 import Image from "next/image";
 import { auth, signIn, signOut } from "@/auth";
 import { BsGithub } from "react-icons/bs";
+import { Sun, Moon } from "lucide-react";
+import DarkModeToggle from "../ui/DarkModeToggle";
 
 const Navbar = async () => {
   const session = await auth();
 
   return (
-    <header className="bg-secondary px-5 py-1 shadow-md font-work-sans border-b-5 border-black">
+    <header className="bg-background px-5 py-1 shadow-md font-work-sans border-b-3 border-black">
       <nav className="flex justify-between items-center">
         <Link href="/">
           <Image src="/logo.png" alt="logo" width={150} height={30} />
         </Link>
 
         <div className="flex items-center gap-5">
+          <DarkModeToggle />
           {session && session?.user ? (
             <>
               <Link href={"/game/upload"}>
-                <span>Upload</span>
+                <button className="text-black profile-btn poi" type="submit">
+                  create
+                </button>
               </Link>
 
               <form
@@ -35,6 +40,11 @@ const Navbar = async () => {
 
               <Link href={`/user/${session?.user?.id}`}>
                 <span className="profile-btn">{session?.user?.name}</span>
+                <img
+                  src={session?.user?.image || "/default-avatar.png"}
+                  alt="Profile picture"
+                  className="w-8 h-8 rounded-full"
+                />
               </Link>
             </>
           ) : (
@@ -45,9 +55,9 @@ const Navbar = async () => {
                 await signIn("github");
               }}
             >
-              <button className="!text-secondary login-btn" type="submit">
+              <button className="!text-black login-btn" type="submit">
                 Login
-                <BsGithub className="text-3xl flex text-secondary" />
+                <BsGithub className="text-3xl flex text-black" />
               </button>
             </form>
           )}
