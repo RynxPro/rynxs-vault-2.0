@@ -162,10 +162,4 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## 📞 Contact
-
-For questions, feedback, or collaboration, please contact [your.email@domain.com].
-
----
-
 **_Thank you for reviewing my graduation project!_**
