@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createGame } from '@/lib/actions';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
-import { Upload, Gamepad2, Loader2, CheckCircle } from 'lucide-react';
-import { formSchema, GAME_CATEGORIES } from '@/lib/validation';
-import { debounce } from '@/lib/utils';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createGame } from "@/lib/actions";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { Upload, Gamepad2, Loader2, CheckCircle } from "lucide-react";
+import { formSchema, GAME_CATEGORIES } from "@/lib/validation";
+import { debounce } from "@/lib/utils";
 
 interface FormData {
   title: string;
@@ -22,25 +22,26 @@ export default function GameForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<FormData>({
-    title: '',
-    description: '',
-    category: '',
-    image: '',
-    gameUrl: ''
+    title: "",
+    description: "",
+    category: "",
+    image: "",
+    gameUrl: "",
   });
   const router = useRouter();
 
   // Debounced validation
   const validateField = debounce((name: string, value: string) => {
     try {
-      const fieldSchema = formSchema.shape[name as keyof typeof formSchema.shape];
+      const fieldSchema =
+        formSchema.shape[name as keyof typeof formSchema.shape];
       if (fieldSchema) {
         fieldSchema.parse(value);
-        setErrors(prev => ({ ...prev, [name]: '' }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
       }
     } catch (error) {
       if (error instanceof Error) {
-        setErrors(prev => ({ ...prev, [name]: error.message }));
+        setErrors((prev) => ({ ...prev, [name]: error.message }));
       }
     }
   }, 300);
@@ -52,41 +53,42 @@ export default function GameForm() {
     try {
       // Validate entire form
       const validatedData = formSchema.parse(formData);
-      
+
       // Create FormData object to match the server action signature
       const form = new FormData();
-      form.append('title', validatedData.title);
-      form.append('description', validatedData.description);
-      form.append('category', validatedData.category);
-      form.append('image', validatedData.image);
-      form.append('gameUrl', validatedData.gameUrl);
+      form.append("title", validatedData.title);
+      form.append("description", validatedData.description);
+      form.append("category", validatedData.category);
+      form.append("image", validatedData.image);
+      form.append("gameUrl", validatedData.gameUrl);
 
-      const result = await createGame({}, form, '');
-      
-      if (result.status === 'SUCCESS') {
-        toast.success('Game uploaded successfully!', {
-          description: 'Your game is now live on the platform.',
-          icon: <CheckCircle className="w-5 h-5 text-green-500" />
+      const result = await createGame(form);
+
+      if (result.status === "SUCCESS") {
+        toast.success("Game uploaded successfully!", {
+          description: "Your game is now live on the platform.",
+          icon: <CheckCircle className="w-5 h-5 text-green-500" />,
         });
-        router.push('/');
+        router.push("/");
       } else {
-        throw new Error(result.error || 'Failed to upload game');
+        throw new Error(result.error || "Failed to upload game");
       }
     } catch (error) {
-      if (error instanceof Error && error.message.includes('validation')) {
+      if (error instanceof Error && error.message.includes("validation")) {
         // Handle validation errors
         const validationErrors: Record<string, string> = {};
-        error.message.split(',').forEach(err => {
-          const [field, message] = err.split(':').map(s => s.trim());
+        error.message.split(",").forEach((err) => {
+          const [field, message] = err.split(":").map((s) => s.trim());
           if (field && message) {
             validationErrors[field] = message;
           }
         });
         setErrors(validationErrors);
-        toast.error('Please fix the validation errors');
+        toast.error("Please fix the validation errors");
       } else {
-        toast.error('Failed to upload game', {
-          description: error instanceof Error ? error.message : 'Please try again.',
+        toast.error("Failed to upload game", {
+          description:
+            error instanceof Error ? error.message : "Please try again.",
         });
       }
     } finally {
@@ -94,15 +96,19 @@ export default function GameForm() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-    
+
     // Validate field
     validateField(name, value);
   };
@@ -117,8 +123,12 @@ export default function GameForm() {
               <Gamepad2 className="w-6 h-6 text-white" aria-hidden="true" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Upload Your Game</h1>
-              <p className="text-primary-100 text-sm">Share your creation with the community</p>
+              <h1 className="text-2xl font-bold text-white">
+                Upload Your Game
+              </h1>
+              <p className="text-primary-100 text-sm">
+                Share your creation with the community
+              </p>
             </div>
           </div>
         </header>
@@ -127,7 +137,10 @@ export default function GameForm() {
         <form onSubmit={handleSubmit} className="p-8 space-y-6" noValidate>
           {/* Title */}
           <div className="space-y-2">
-            <label htmlFor="title" className="block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="title"
+              className="block text-sm font-semibold text-gray-700"
+            >
               Game Title *
             </label>
             <Input
@@ -139,9 +152,11 @@ export default function GameForm() {
               onChange={handleInputChange}
               required
               className={`h-12 px-4 border-gray-200 focus:border-primary-500 focus:ring-primary-500 rounded-xl ${
-                errors.title ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                errors.title
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  : ""
               }`}
-              aria-describedby={errors.title ? 'title-error' : undefined}
+              aria-describedby={errors.title ? "title-error" : undefined}
             />
             {errors.title && (
               <p id="title-error" className="text-sm text-red-600 mt-1">
@@ -152,7 +167,10 @@ export default function GameForm() {
 
           {/* Description */}
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="description"
+              className="block text-sm font-semibold text-gray-700"
+            >
               Description *
             </label>
             <Textarea
@@ -164,9 +182,13 @@ export default function GameForm() {
               required
               rows={4}
               className={`px-4 py-3 border-gray-200 focus:border-primary-500 focus:ring-primary-500 rounded-xl resize-none ${
-                errors.description ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                errors.description
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  : ""
               }`}
-              aria-describedby={errors.description ? 'description-error' : undefined}
+              aria-describedby={
+                errors.description ? "description-error" : undefined
+              }
             />
             {errors.description && (
               <p id="description-error" className="text-sm text-red-600 mt-1">
@@ -177,7 +199,10 @@ export default function GameForm() {
 
           {/* Category */}
           <div className="space-y-2">
-            <label htmlFor="category" className="block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="category"
+              className="block text-sm font-semibold text-gray-700"
+            >
               Category *
             </label>
             <select
@@ -187,12 +212,14 @@ export default function GameForm() {
               onChange={handleInputChange}
               required
               className={`w-full h-12 px-4 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-primary-500 bg-white ${
-                errors.category ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                errors.category
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  : ""
               }`}
-              aria-describedby={errors.category ? 'category-error' : undefined}
+              aria-describedby={errors.category ? "category-error" : undefined}
             >
               <option value="">Select a category</option>
-              {GAME_CATEGORIES.map(category => (
+              {GAME_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -207,7 +234,10 @@ export default function GameForm() {
 
           {/* Game URL */}
           <div className="space-y-2">
-            <label htmlFor="gameUrl" className="block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="gameUrl"
+              className="block text-sm font-semibold text-gray-700"
+            >
               Game URL *
             </label>
             <Input
@@ -219,9 +249,11 @@ export default function GameForm() {
               onChange={handleInputChange}
               required
               className={`h-12 px-4 border-gray-200 focus:border-primary-500 focus:ring-primary-500 rounded-xl ${
-                errors.gameUrl ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                errors.gameUrl
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  : ""
               }`}
-              aria-describedby={errors.gameUrl ? 'gameUrl-error' : undefined}
+              aria-describedby={errors.gameUrl ? "gameUrl-error" : undefined}
             />
             {errors.gameUrl && (
               <p id="gameUrl-error" className="text-sm text-red-600 mt-1">
@@ -232,7 +264,10 @@ export default function GameForm() {
 
           {/* Image URL */}
           <div className="space-y-2">
-            <label htmlFor="image" className="block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="image"
+              className="block text-sm font-semibold text-gray-700"
+            >
               Game Image URL *
             </label>
             <Input
@@ -244,9 +279,11 @@ export default function GameForm() {
               onChange={handleInputChange}
               required
               className={`h-12 px-4 border-gray-200 focus:border-primary-500 focus:ring-primary-500 rounded-xl ${
-                errors.image ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                errors.image
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  : ""
               }`}
-              aria-describedby={errors.image ? 'image-error' : undefined}
+              aria-describedby={errors.image ? "image-error" : undefined}
             />
             <p className="text-xs text-gray-500">
               Provide a direct link to your game&apos;s image (JPG, PNG, or GIF)
@@ -263,16 +300,19 @@ export default function GameForm() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              className="w-full h-14 text-lg bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-2xl border border-primary-600 shadow-xl hover:shadow-2xl focus:ring-4 focus:ring-primary-300/40 transition-all duration-200 flex items-center justify-center gap-3 hover:scale-105 active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
+                  <Loader2
+                    className="w-6 h-6 mr-2 animate-spin"
+                    aria-hidden="true"
+                  />
                   Uploading Game...
                 </>
               ) : (
                 <>
-                  <Upload className="w-5 h-5 mr-2" aria-hidden="true" />
+                  <Upload className="w-6 h-6 mr-2" aria-hidden="true" />
                   Upload Game
                 </>
               )}
