@@ -196,7 +196,13 @@ export type Game = {
     [internalGroqTypeReferenceTo]?: "author";
   };
   views?: number;
-  followers?: number;
+  followers?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "author";
+  }>;
   description?: string;
   category?: string;
   image?: string;

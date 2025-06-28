@@ -8,10 +8,10 @@ interface SearchFormProps {
 
 const SearchForm = ({ query }: SearchFormProps) => {
   return (
-    <Form 
-      action="/" 
-      scroll={false} 
-      className="max-w-3xl w-full min-h-[80px] bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl text-[20px] mt-8 px-8 flex items-center gap-4 shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl" 
+    <Form
+      action="/"
+      scroll={false}
+      className="search-form max-w-3xl w-full min-h-[80px] bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl text-[20px] mt-8 px-8 flex items-center gap-4 shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
       role="search"
     >
       <div className="flex items-center gap-3 flex-1">
@@ -41,8 +41,8 @@ const SearchForm = ({ query }: SearchFormProps) => {
       <div className="flex gap-2">
         {query && <SearchFormReset />}
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="size-[50px] rounded-full bg-gradient-to-r from-primary-500 to-primary-600 text-white flex justify-center items-center transition-all duration-200 hover:scale-110 shadow-lg hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           aria-label="Search"
         >
