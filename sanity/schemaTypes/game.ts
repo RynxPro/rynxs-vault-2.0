@@ -27,7 +27,10 @@ export const game = defineType({
     }),
     defineField({
       name: "followers",
-      type: "number",
+      title: "Followers",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "author" }] }],
+      description: "Users who follow this game",
     }),
     defineField({
       name: "description",

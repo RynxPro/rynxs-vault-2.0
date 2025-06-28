@@ -747,5 +747,90 @@ export const initializeAuthorFollowers = async () => {
 };
 
 /**
- * Initialize views for existing posts that don't have the field
+ * Toggle game follow status
  */
+export const toggleGameFollow = async (formData: FormData) => {
+  try {
+    const gameId = formData.get("gameId") as string;
+    const currentUserId = formData.get("currentUserId") as string;
+
+    console.log("toggleGameFollow called with:", { gameId, currentUserId });
+
+    if (!gameId || !currentUserId) {
+      return { status: "ERROR", error: "Game ID and current user ID are required" };
+    }
+
+    // Get the game document
+    const game = await client.fetch(`
+      *[_type == "game" && _id == $gameId][0] {
+        _id,
+        followers
+      }
+    `, { gameId });
+
+    console.log("Game:", game);
+
+    if (!game) {
+      return { status: "ERROR", error: "Game not found" };
+    }
+
+    // Check if current user is already following the game
+    const isFollowing = game.followers?.some((follower: any) => follower._ref === currentUserId);
+    console.log("Is following game:", isFollowing);
+
+    if (isFollowing) {
+      // Unfollow - remove current user from game's followers
+      console.log("Unfollowing game");
+      await writeClient
+        .patch(gameId)
+        .unset([`followers[_ref == "${currentUserId}"]`])
+        .commit();
+    } else {
+      // Follow - add current user to game's followers
+      console.log("Following game");
+      await writeClient
+        .patch(gameId)
+        .setIfMissing({ followers: [] })
+        .append('followers', [{ _type: 'reference', _ref: currentUserId }])
+        .commit();
+    }
+
+    console.log("Game follow toggle completed successfully");
+    return { status: "SUCCESS" };
+  } catch (error) {
+    console.error("Error toggling game follow:", error);
+    return { status: "ERROR", error: "Failed to update game follow status" };
+  }
+};
+
+/**
+ * Initialize game followers for existing games that don't have the field
+ */
+export const initializeGameFollowers = async () => {
+  try {
+    // Get all games that don't have followers field
+    const gamesWithoutFollowers = await client.fetch(`
+      *[_type == "game" && !defined(followers)] {
+        _id,
+        title
+      }
+    `);
+
+    console.log(`Found ${gamesWithoutFollowers.length} games without followers field`);
+
+    let updatedCount = 0;
+    for (const game of gamesWithoutFollowers) {
+      await writeClient
+        .patch(game._id)
+        .set({ followers: [] })
+        .commit();
+      updatedCount++;
+    }
+
+    console.log(`Initialized followers for ${updatedCount} games`);
+    return { status: "SUCCESS", updatedCount };
+  } catch (error) {
+    console.error("Error initializing game followers:", error);
+    return { status: "ERROR", error: "Failed to initialize game followers" };
+  }
+};

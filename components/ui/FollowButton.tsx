@@ -100,4 +100,4 @@ const FollowButton = ({ userId, currentUser, initialFollowersCount = 0, isFollow
   );
 };
 
-export default FollowButton; 
+export default FollowButton;

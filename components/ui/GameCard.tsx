@@ -8,12 +8,7 @@ import { Author, Game } from "@/sanity/types";
 import { useState, useMemo } from "react";
 import UserAvatar from "./UserAvatar";
 
-// Custom type for author with followers count
-type AuthorWithFollowers = Author & {
-  followersCount?: number;
-};
-
-export type GameCardType = Omit<Game, "author"> & { author?: AuthorWithFollowers };
+export type GameCardType = Omit<Game, "author"> & { author?: Author };
 
 interface GameCardProps {
   post: GameCardType;
@@ -37,7 +32,7 @@ const GameCard = ({ post }: GameCardProps) => {
   // Memoize formatted values for performance
   const formattedDate = useMemo(() => formatDate(_createdAt), [_createdAt]);
   const formattedViews = useMemo(() => formatViewNumber(views), [views]);
-  const formattedFollowers = useMemo(() => formatFollowNumber(author?.followersCount || 0), [author?.followersCount]);
+  const formattedFollowers = useMemo(() => formatFollowNumber(followers || 0), [followers]);
 
   // Validate required fields
   if (!_id || !title) {

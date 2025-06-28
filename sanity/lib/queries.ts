@@ -10,8 +10,7 @@ export const GAMES_QUERY =
         _id,
         name,
         username,
-        image,
-        "followersCount": count(followers)
+        image
         },
         views,
         followers,
@@ -48,7 +47,12 @@ export const GAME_BY_ID_QUERY = `
       }
     },
     views,
-    followers,
+    followers[]->{
+      _id,
+      name,
+      username,
+      image
+    },
     description,
     category,
     image,

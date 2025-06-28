@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import UserAvatar from "@/components/ui/UserAvatar";
 import FollowButton from "@/components/ui/FollowButton";
+import GameFollowButton from "@/components/ui/GameFollowButton";
 import { auth } from "@/auth";
 
 // Generate metadata for the page
@@ -119,6 +120,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   let isFollowingAuthor = false;
   if (session?.id && game.author?._id && session.id !== game.author._id) {
     isFollowingAuthor = game.author.followers?.some((follower: any) => follower._id === session.id) || false;
+  }
+
+  // Check if current user is following the game
+  let isFollowingGame = false;
+  if (session?.id && game._id) {
+    isFollowingGame = game.followers?.some((follower: any) => follower._id === session.id) || false;
   }
 
   return (
@@ -250,6 +257,10 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   <span className="font-semibold text-gray-900">{formatViewNumber(game.views || 0)}</span>
                 </div>
                 <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Game Followers</span>
+                  <span className="font-semibold text-gray-900">{formatFollowNumber(game.followers?.length || 0)}</span>
+                </div>
+                <div className="flex items-center justify-between">
                   <span className="text-gray-600">Author Followers</span>
                   <span className="font-semibold text-gray-900">{formatFollowNumber(game.author?.followers?.length || 0)}</span>
                 </div>
@@ -267,18 +278,21 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <Link
                   href="/post/upload"
-                  className="flex items-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all duration-300 hover:scale-105 shadow-md"
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all duration-300 hover:scale-105 shadow-md active:scale-95"
                 >
                   <MessageCircleIcon className="w-5 h-5" />
                   <span>Create Post</span>
                 </Link>
-                <button className="flex items-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 hover:scale-105 shadow-md">
-                  <StarIcon className="w-5 h-5" />
-                  <span>Follow Game</span>
-                </button>
+                
+                <GameFollowButton 
+                  gameId={game._id}
+                  currentUser={session}
+                  initialFollowersCount={game.followers?.length || 0}
+                  isFollowing={isFollowingGame}
+                />
               </div>
             </div>
           </div>
