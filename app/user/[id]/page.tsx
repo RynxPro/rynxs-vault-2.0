@@ -5,8 +5,9 @@ import { AUTHOR_BY_ID_QUERY } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import { Metadata } from "next";
-import { UserIcon, Gamepad2, MailIcon } from "lucide-react";
+import { UserIcon, Gamepad2, MailIcon, UsersIcon } from "lucide-react";
 import UserAvatar from "@/components/ui/UserAvatar";
+import FollowButton from "@/components/ui/FollowButton";
 
 export const experimental_ppr = true;
 
@@ -46,6 +47,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const user = await client.fetch(AUTHOR_BY_ID_QUERY, { id });
   if (!user) return notFound();
+
+  // Check if current user is following this user
+  let isFollowing = false;
+  if (session?.id && session.id !== id) {
+    isFollowing = user.followers?.some((follower: any) => follower._id === session.id) || false;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -90,12 +97,26 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <Gamepad2 className="w-5 h-5 text-primary-200" />
                 <span className="text-primary-200 font-medium">Game Developer</span>
               </div>
+              <div className="flex items-center gap-2">
+                <UsersIcon className="w-5 h-5 text-primary-200" />
+                <span className="text-primary-200 font-medium">{user.followers?.length || 0} followers</span>
+              </div>
               {user.email && (
                 <div className="flex items-center gap-2">
                   <MailIcon className="w-5 h-5 text-primary-200" />
                   <span className="text-primary-200 font-medium">{user.email}</span>
                 </div>
               )}
+            </div>
+
+            {/* Follow Button */}
+            <div className="mt-8">
+              <FollowButton 
+                userId={user._id} 
+                currentUser={session} 
+                initialFollowersCount={user.followers?.length || 0}
+                isFollowing={isFollowing}
+              />
             </div>
           </div>
         </div>

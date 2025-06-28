@@ -652,3 +652,100 @@ export const incrementGameViews = async (gameId: string) => {
     return { status: "ERROR", error: "Failed to increment views" };
   }
 };
+
+/**
+ * Toggle follow status for a user
+ */
+export const toggleFollow = async (formData: FormData) => {
+  try {
+    const userId = formData.get("userId") as string;
+    const currentUserId = formData.get("currentUserId") as string;
+
+    console.log("toggleFollow called with:", { userId, currentUserId });
+
+    if (!userId || !currentUserId) {
+      return { status: "ERROR", error: "User ID and current user ID are required" };
+    }
+
+    if (userId === currentUserId) {
+      return { status: "ERROR", error: "You cannot follow yourself" };
+    }
+
+    // Get the target user's author document (the user being followed)
+    const targetUser = await client.fetch(`
+      *[_type == "author" && _id == $userId][0] {
+        _id,
+        followers
+      }
+    `, { userId });
+
+    console.log("Target user:", targetUser);
+
+    if (!targetUser) {
+      return { status: "ERROR", error: "Target user not found" };
+    }
+
+    // Check if current user is already following the target user
+    const isFollowing = targetUser.followers?.some((follower: any) => follower._ref === currentUserId);
+    console.log("Is following:", isFollowing);
+
+    if (isFollowing) {
+      // Unfollow - remove current user from target user's followers
+      console.log("Unfollowing user");
+      await writeClient
+        .patch(userId)
+        .unset([`followers[_ref == "${currentUserId}"]`])
+        .commit();
+    } else {
+      // Follow - add current user to target user's followers
+      console.log("Following user");
+      await writeClient
+        .patch(userId)
+        .setIfMissing({ followers: [] })
+        .append('followers', [{ _type: 'reference', _ref: currentUserId }])
+        .commit();
+    }
+
+    console.log("Follow toggle completed successfully");
+    return { status: "SUCCESS" };
+  } catch (error) {
+    console.error("Error toggling follow:", error);
+    return { status: "ERROR", error: "Failed to update follow status" };
+  }
+};
+
+/**
+ * Initialize followers for existing authors that don't have the field
+ */
+export const initializeAuthorFollowers = async () => {
+  try {
+    // Get all authors that don't have followers field
+    const authorsWithoutFollowers = await client.fetch(`
+      *[_type == "author" && !defined(followers)] {
+        _id,
+        name
+      }
+    `);
+
+    console.log(`Found ${authorsWithoutFollowers.length} authors without followers field`);
+
+    let updatedCount = 0;
+    for (const author of authorsWithoutFollowers) {
+      await writeClient
+        .patch(author._id)
+        .set({ followers: [] })
+        .commit();
+      updatedCount++;
+    }
+
+    console.log(`Initialized followers for ${updatedCount} authors`);
+    return { status: "SUCCESS", updatedCount };
+  } catch (error) {
+    console.error("Error initializing author followers:", error);
+    return { status: "ERROR", error: "Failed to initialize followers" };
+  }
+};
+
+/**
+ * Initialize views for existing posts that don't have the field
+ */

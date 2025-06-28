@@ -9,6 +9,8 @@ import PostList from "@/components/ui/PostList";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import UserAvatar from "@/components/ui/UserAvatar";
+import FollowButton from "@/components/ui/FollowButton";
+import { auth } from "@/auth";
 
 // Generate metadata for the page
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -42,6 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
+  const session = await auth();
 
   // Fetch game and posts data
   let game;
@@ -110,6 +113,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (error || !game) {
     notFound();
+  }
+
+  // Check if current user is following the game author
+  let isFollowingAuthor = false;
+  if (session?.id && game.author?._id && session.id !== game.author._id) {
+    isFollowingAuthor = game.author.followers?.some((follower: any) => follower._id === session.id) || false;
   }
 
   return (
@@ -204,13 +213,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   </div>
                 </Link>
 
-                <button 
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 hover:scale-105 shadow-lg"
-                  aria-label="Follow this developer"
-                >
-                  <BellRingIcon className="w-5 h-5" />
-                  <span>Follow</span>
-                </button>
+                <FollowButton 
+                  userId={game.author?._id || ""}
+                  currentUser={session}
+                  initialFollowersCount={game.author?.followers?.length || 0}
+                  isFollowing={isFollowingAuthor}
+                />
               </div>
             </div>
 
@@ -242,8 +250,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   <span className="font-semibold text-gray-900">{formatViewNumber(game.views || 0)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Followers</span>
-                  <span className="font-semibold text-gray-900">{formatFollowNumber(game.followers || 0)}</span>
+                  <span className="text-gray-600">Author Followers</span>
+                  <span className="font-semibold text-gray-900">{formatFollowNumber(game.author?.followers?.length || 0)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Category</span>

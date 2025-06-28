@@ -11,7 +11,7 @@ export const GAMES_QUERY =
         name,
         username,
         image,
-        followers
+        "followersCount": count(followers)
         },
         views,
         followers,
@@ -36,10 +36,16 @@ export const GAME_BY_ID_QUERY = `
     _createdAt,
     slug,
     author->{
+      _id,
       name,
       username,
       image,
-      followers
+      followers[]->{
+        _id,
+        name,
+        username,
+        image
+      }
     },
     views,
     followers,
@@ -142,7 +148,13 @@ export const AUTHOR_BY_ID_QUERY = defineQuery(`
         username,
         email,
         image,
-        bio
+        bio,
+        followers[]->{
+          _id,
+          name,
+          username,
+          image
+        }
     }
     `);
 
