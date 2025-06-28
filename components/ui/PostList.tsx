@@ -192,16 +192,16 @@ const PostList = ({ posts }: { posts: PostCardType[] }) => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1.5">
+                      <EyeIcon className="w-4 h-4 text-gray-400" />
+                      <span>{post.views || 0} views</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
                       <HeartIcon className="w-4 h-4 text-red-500" />
                       <span>{post.likes?.length || 0} likes</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <MessageCircleIcon className="w-4 h-4 text-blue-500" />
                       <span>{post.comments?.length || 0} comments</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <EyeIcon className="w-4 h-4 text-gray-400" />
-                      <span>Read more</span>
                     </div>
                   </div>
 

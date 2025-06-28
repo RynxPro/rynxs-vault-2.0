@@ -66,6 +66,7 @@ export const POSTS_BY_GAME_QUERY = `
     image,
     content,
     _createdAt,
+    views,
     author->{
       _id,
       name,
@@ -97,6 +98,7 @@ export const ALL_POSTS_QUERY = `
     image,
     content,
     _createdAt,
+    views,
     author->{
       _id,
       name,

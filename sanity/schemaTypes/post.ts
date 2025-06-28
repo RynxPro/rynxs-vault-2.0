@@ -43,6 +43,14 @@ export const post = defineType({
       description: "Direct URL to the post image (optional)",
     }),
     defineField({
+      name: "views",
+      type: "number",
+      title: "Views",
+      description: "Number of times this post has been viewed",
+      initialValue: 0,
+      readOnly: true,
+    }),
+    defineField({
       name: "comments",
       type: "array",
       title: "Comments",

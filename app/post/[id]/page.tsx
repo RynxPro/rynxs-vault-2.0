@@ -10,7 +10,8 @@ import {
   HeartIcon, 
   CalendarIcon, 
   ArrowLeftIcon,
-  Gamepad2Icon
+  Gamepad2Icon,
+  EyeIcon
 } from "lucide-react";
 import UserAvatar from "@/components/ui/UserAvatar";
 import CommentSection from "@/components/ui/CommentSection";
@@ -26,6 +27,7 @@ const POST_BY_ID_QUERY = `
     content,
     image,
     _createdAt,
+    views,
     author->{
       _id,
       name,
@@ -93,6 +95,13 @@ const PostDetailPage = async ({ params }: { params: Promise<{ id: string }> }) =
 
   try {
     post = await client.fetch(POST_BY_ID_QUERY, { id });
+    
+    // Increment views when post is viewed
+    if (post) {
+      // Import the action dynamically to avoid server/client issues
+      const { incrementPostViews } = await import("@/lib/actions");
+      await incrementPostViews(id);
+    }
   } catch (err) {
     error = err as Error;
   }
@@ -158,6 +167,10 @@ const PostDetailPage = async ({ params }: { params: Promise<{ id: string }> }) =
                 <time dateTime={post._createdAt} className="font-medium">
                   {formatDate(post._createdAt)}
                 </time>
+              </div>
+              <div className="flex items-center gap-2 text-primary-100">
+                <EyeIcon className="w-5 h-5" />
+                <span className="font-medium">{post.views || 0} views</span>
               </div>
               <div className="flex items-center gap-2 text-primary-100">
                 <MessageCircleIcon className="w-5 h-5" />

@@ -455,6 +455,93 @@ export const getComments = async (postId: string) => {
 };
 
 /**
+ * Initialize views for existing games that don't have the field
+ */
+export const initializeGameViews = async () => {
+  try {
+    // Get all games that don't have views field
+    const gamesWithoutViews = await client.fetch(`
+      *[_type == "game" && !defined(views)] {
+        _id,
+        title
+      }
+    `);
+
+    console.log(`Found ${gamesWithoutViews.length} games without views field`);
+
+    let updatedCount = 0;
+    for (const game of gamesWithoutViews) {
+      await writeClient
+        .patch(game._id)
+        .set({ views: 0 })
+        .commit();
+      updatedCount++;
+    }
+
+    console.log(`Initialized views for ${updatedCount} games`);
+    return { status: "SUCCESS", updatedCount };
+  } catch (error) {
+    console.error("Error initializing game views:", error);
+    return { status: "ERROR", error: "Failed to initialize views" };
+  }
+};
+
+/**
+ * Initialize views for existing posts that don't have the field
+ */
+export const initializePostViews = async () => {
+  try {
+    // Get all posts that don't have views field
+    const postsWithoutViews = await client.fetch(`
+      *[_type == "post" && !defined(views)] {
+        _id,
+        title
+      }
+    `);
+
+    console.log(`Found ${postsWithoutViews.length} posts without views field`);
+
+    let updatedCount = 0;
+    for (const post of postsWithoutViews) {
+      await writeClient
+        .patch(post._id)
+        .set({ views: 0 })
+        .commit();
+      updatedCount++;
+    }
+
+    console.log(`Initialized views for ${updatedCount} posts`);
+    return { status: "SUCCESS", updatedCount };
+  } catch (error) {
+    console.error("Error initializing post views:", error);
+    return { status: "ERROR", error: "Failed to initialize views" };
+  }
+};
+
+/**
+ * Increment post views
+ */
+export const incrementPostViews = async (postId: string) => {
+  try {
+    if (!postId) {
+      return { status: "ERROR", error: "Post ID is required" };
+    }
+
+    // Increment the views count
+    await writeClient
+      .patch(postId)
+      .setIfMissing({ views: 0 })
+      .inc({ views: 1 })
+      .commit();
+
+    return { status: "SUCCESS" };
+  } catch (error) {
+    console.error("Error incrementing post views:", error);
+    return { status: "ERROR", error: "Failed to increment views" };
+  }
+};
+
+/**
  * Fix existing comments and likes that are missing _key properties
  * This is a one-time fix for existing data
  */
@@ -540,5 +627,28 @@ export const fixMissingKeys = async (form: FormData) => {
   } catch (error) {
     console.error("Error fixing missing keys:", error);
     return { status: "ERROR", error: "Failed to fix missing keys" };
+  }
+};
+
+/**
+ * Increment game views
+ */
+export const incrementGameViews = async (gameId: string) => {
+  try {
+    if (!gameId) {
+      return { status: "ERROR", error: "Game ID is required" };
+    }
+
+    // Increment the views count
+    await writeClient
+      .patch(gameId)
+      .setIfMissing({ views: 0 })
+      .inc({ views: 1 })
+      .commit();
+
+    return { status: "SUCCESS" };
+  } catch (error) {
+    console.error("Error incrementing game views:", error);
+    return { status: "ERROR", error: "Failed to increment views" };
   }
 };

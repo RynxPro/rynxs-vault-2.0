@@ -50,6 +50,14 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   try {
     game = await client.fetch(GAME_BY_ID_QUERY, { id });
+    
+    // Increment views when game is viewed
+    if (game) {
+      // Import the action dynamically to avoid server/client issues
+      const { incrementGameViews } = await import("@/lib/actions");
+      await incrementGameViews(id);
+    }
+    
     if (game) {
       posts = await client.fetch(POSTS_BY_GAME_QUERY, { gameId: id });
       

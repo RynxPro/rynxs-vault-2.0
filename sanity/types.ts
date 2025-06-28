@@ -163,6 +163,7 @@ export type Post = {
   };
   content?: string;
   image?: string;
+  views?: number;
   comments?: Array<{
     _ref: string;
     _type: "reference";

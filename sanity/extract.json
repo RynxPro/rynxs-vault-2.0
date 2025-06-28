@@ -867,6 +867,13 @@
         },
         "optional": true
       },
+      "views": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
       "comments": {
         "type": "objectAttribute",
         "value": {

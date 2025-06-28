@@ -41,8 +41,6 @@ const PostsPage = async ({
       post.comments?.map((ref: any) => ref._ref) || []
     );
     
-    console.log("All comment refs:", allCommentRefs);
-    
     if (allCommentRefs.length > 0) {
       // Fetch all comment documents in one query
       const commentDocuments = await client.fetch(`
@@ -59,8 +57,6 @@ const PostsPage = async ({
         }
       `, { commentRefs: allCommentRefs });
 
-      console.log("Comment documents:", commentDocuments);
-
       // Create a map for quick lookup
       const commentMap = new Map(commentDocuments.map((comment: any) => [comment._id, comment]));
 
@@ -74,8 +70,6 @@ const PostsPage = async ({
               _key: ref._key
             } : null;
           }).filter(Boolean);
-          
-          console.log(`Resolved comments for post ${post._id}:`, resolvedComments);
           
           return {
             ...post,
