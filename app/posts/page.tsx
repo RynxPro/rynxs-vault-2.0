@@ -36,6 +36,50 @@ const PostsPage = async ({
     // Get all posts and filter client-side if needed
     posts = await client.fetch(ALL_POSTS_QUERY);
     
+    // Resolve comments for all posts
+    const allCommentRefs = posts.flatMap((post: any) => 
+      post.comments?.map((ref: any) => ref._ref) || []
+    );
+    
+    if (allCommentRefs.length > 0) {
+      // Fetch all comment documents in one query
+      const commentDocuments = await client.fetch(`
+        *[_type == "comment" && _id in $commentRefs] {
+          _id,
+          comment,
+          createdAt,
+          author-> {
+            _id,
+            name,
+            username,
+            image
+          }
+        }
+      `, { commentRefs: allCommentRefs });
+
+      // Create a map for quick lookup
+      const commentMap = new Map(commentDocuments.map((comment: any) => [comment._id, comment]));
+
+      // Resolve comments for each post
+      posts = posts.map((post: any) => {
+        if (post.comments && post.comments.length > 0) {
+          const resolvedComments = post.comments.map((ref: any) => {
+            const comment = commentMap.get(ref._ref);
+            return comment ? {
+              ...comment,
+              _key: ref._key
+            } : null;
+          }).filter(Boolean);
+          
+          return {
+            ...post,
+            comments: resolvedComments
+          };
+        }
+        return post;
+      });
+    }
+    
     // Filter by query if provided
     if (query) {
       const searchTerm = query.toLowerCase();

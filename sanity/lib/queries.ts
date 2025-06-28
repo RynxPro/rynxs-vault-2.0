@@ -20,14 +20,7 @@ export const GAMES_QUERY =
         image,
         comments[] {
           _key,
-          author->{
-            _id,
-            name,
-            username,
-            image
-          },
-          comment,
-          createdAt
+          _ref
         },
         likes[]->{
           _id,
@@ -55,14 +48,7 @@ export const GAME_BY_ID_QUERY = `
     image,
     comments[] {
       _key,
-      author->{
-        _id,
-        name,
-        username,
-        image
-      },
-      comment,
-      createdAt
+      _ref
     },
     likes[]->{
       _id,
@@ -93,14 +79,7 @@ export const POSTS_BY_GAME_QUERY = `
     },
     comments[] {
       _key,
-      author->{
-        _id,
-        name,
-        username,
-        image
-      },
-      comment,
-      createdAt
+      _ref
     },
     likes[]->{
       _id,
@@ -131,14 +110,7 @@ export const ALL_POSTS_QUERY = `
     },
     comments[] {
       _key,
-      author->{
-        _id,
-        name,
-        username,
-        image
-      },
-      comment,
-      createdAt
+      _ref
     },
     likes[]->{
       _id,
@@ -191,14 +163,7 @@ export const GAMES_BY_AUTHOR_QUERY =
         image,
         comments[] {
           _key,
-          author->{
-            _id,
-            name,
-            username,
-            image
-          },
-          comment,
-          createdAt
+          _ref
         },
         likes[]->{
           _id,
