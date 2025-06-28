@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 
+
 export const post = defineType({
   name: "post",
   title: "Post",
@@ -37,37 +38,15 @@ export const post = defineType({
     }),
     defineField({
       name: "image",
-      type: "image",
-      title: "Header Image",
-      options: {
-        hotspot: true,
-      },
+      type: "url",
+      title: "Header Image URL",
+      description: "Direct URL to the post image (optional)",
     }),
     defineField({
       name: "comments",
       type: "array",
       title: "Comments",
-      of: [
-        {
-          type: "object",
-          fields: [
-            {
-              name: "author",
-              type: "reference",
-              to: [{ type: "author" }],
-              title: "Author",
-            },
-            { name: "comment", type: "text", title: "Comment" },
-            {
-              name: "createdAt",
-              type: "datetime",
-              title: "Commented At",
-              initialValue: () => new Date().toISOString(),
-              readOnly: true,
-            },
-          ],
-        },
-      ],
+      of: [{ type: "reference", to: [{ type: "comment" }] }],
     }),
     defineField({
       name: "likes",

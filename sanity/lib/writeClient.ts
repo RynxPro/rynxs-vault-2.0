@@ -7,7 +7,7 @@ const writeClient = createClient({
   dataset,
   apiVersion,
   useCdn: false, // Always false for writing
-  token: process.env.SANITY_WRITE_TOKEN, // Must be set in .env.local
+  token: process.env.SANITY_API_TOKEN, // Must be set in .env.local
 });
 
 export default writeClient;

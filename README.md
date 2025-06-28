@@ -1,36 +1,209 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rynx's Vault 2.0 🎮
 
-## Getting Started
+A modern platform for game developers to share their creations, post updates, and build a community around their projects. Built with Next.js 15, Sanity CMS, and NextAuth.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Game Sharing**: Upload and showcase your game projects
+- **Community Building**: Follow developers and engage with their content
+- **Real-time Updates**: Live content updates with Sanity
+- **Search & Discovery**: Find games by title, category, or developer
+- **Authentication**: Secure GitHub OAuth integration
+- **Responsive Design**: Optimized for all devices
+- **Accessibility**: WCAG compliant with keyboard navigation
+- **SEO Optimized**: Meta tags, structured data, and social sharing
+
+## 🚀 Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **CMS**: Sanity v3
+- **Authentication**: NextAuth.js v5
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide React
+- **Animations**: Spline 3D
+- **Deployment**: Vercel (recommended)
+
+## 📋 Prerequisites
+
+- Node.js 18+ 
+- npm, yarn, or pnpm
+- Sanity account
+- GitHub OAuth app
+
+## 🛠️ Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/rynxs-vault-2.0.git
+   cd rynxs-vault-2.0
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+3. **Environment Setup**
+   Create a `.env.local` file in the root directory:
+   ```env
+   # Authentication
+   AUTH_SECRET=your-auth-secret-here
+   GITHUB_ID=your-github-oauth-app-id
+   GITHUB_SECRET=your-github-oauth-app-secret
+
+   # Sanity
+   NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
+   NEXT_PUBLIC_SANITY_DATASET=production
+   SANITY_API_TOKEN=your-sanity-api-token
+
+   # Optional
+   NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+   GOOGLE_SITE_VERIFICATION=your-google-verification-code
+   ```
+
+4. **Sanity Setup**
+   ```bash
+   # Install Sanity CLI globally
+   npm install -g @sanity/cli
+
+   # Login to Sanity
+   sanity login
+
+   # Deploy your schema
+   sanity deploy
+   ```
+
+5. **Generate TypeScript types**
+   ```bash
+   npm run typegen
+   ```
+
+6. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+## 🏗️ Project Structure
+
+```
+rynxs-vault-2.0/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   ├── game/              # Game-related pages
+│   ├── user/              # User profile pages
+│   ├── studio/            # Sanity Studio
+│   └── globals.css        # Global styles
+├── components/            # React components
+│   ├── layout/           # Layout components
+│   └── ui/               # UI components
+├── lib/                  # Utility functions
+├── sanity/               # Sanity CMS configuration
+│   ├── schemaTypes/      # Content schemas
+│   └── lib/              # Sanity utilities
+└── public/               # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Customization
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Styling
+The project uses Tailwind CSS with custom CSS variables. Main colors are defined in `app/globals.css`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```css
+:root {
+  --color-primary: #9ec6f3;
+  --color-primary-100: #ffe8f0;
+  --color-secondary: #f8efef;
+  --color-third: rgb(255, 255, 255);
+}
+```
 
-## Learn More
+### Content Schema
+Modify content types in `sanity/schemaTypes/` and regenerate types:
+```bash
+npm run typegen
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 Available Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run typegen` - Generate Sanity TypeScript types
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌐 Deployment
 
-## Deploy on Vercel
+### Vercel (Recommended)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Other Platforms
+
+The app can be deployed to any platform that supports Next.js:
+- Netlify
+- Railway
+- DigitalOcean App Platform
+- AWS Amplify
+
+## 🔒 Security
+
+- Environment variables for sensitive data
+- NextAuth.js for secure authentication
+- Sanity CORS configuration
+- Input validation and sanitization
+
+## ♿ Accessibility
+
+- WCAG 2.1 AA compliant
+- Keyboard navigation support
+- Screen reader friendly
+- High contrast mode support
+- Reduced motion preferences
+
+## 📱 Performance
+
+- Next.js Image optimization
+- Lazy loading for components
+- Code splitting
+- Static generation where possible
+- CDN caching
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) for the amazing framework
+- [Sanity](https://sanity.io/) for the headless CMS
+- [Tailwind CSS](https://tailwindcss.com/) for the styling system
+- [Vercel](https://vercel.com/) for hosting and deployment
+
+## 📞 Support
+
+If you have any questions or need help, please:
+
+1. Check the [Issues](../../issues) page
+2. Create a new issue with a detailed description
+3. Join our community discussions
+
+---
+
+Made with ❤️ by the Rynx's Vault team

@@ -19,18 +19,20 @@ export const GAMES_QUERY =
         category,
         image,
         comments[] {
+          _key,
           author->{
+            _id,
             name,
-            username
+            username,
+            image
           },
           comment,
           createdAt
         },
-        likes[] {
-          author->{
-            name,
-            username
-          }
+        likes[]->{
+          _id,
+          name,
+          username
         }
     }`);
 
@@ -52,18 +54,20 @@ export const GAME_BY_ID_QUERY = `
     category,
     image,
     comments[] {
+      _key,
       author->{
+        _id,
         name,
-        username
+        username,
+        image
       },
       comment,
       createdAt
     },
-    likes[] {
-      author->{
-        name,
-        username
-      }
+    likes[]->{
+      _id,
+      name,
+      username
     }
   }
 `;
@@ -76,19 +80,70 @@ export const POSTS_BY_GAME_QUERY = `
     image,
     content,
     _createdAt,
+    author->{
+      _id,
+      name,
+      username,
+      image
+    },
+    game->{
+      _id,
+      title,
+      category
+    },
     comments[] {
+      _key,
       author->{
+        _id,
         name,
-        username
+        username,
+        image
       },
       comment,
       createdAt
     },
-    likes[] {
+    likes[]->{
+      _id,
+      name,
+      username
+    }
+  }
+`;
+
+export const ALL_POSTS_QUERY = `
+  *[_type == "post"] | order(_createdAt desc) {
+    _id,
+    title,
+    slug,
+    image,
+    content,
+    _createdAt,
+    author->{
+      _id,
+      name,
+      username,
+      image
+    },
+    game->{
+      _id,
+      title,
+      category
+    },
+    comments[] {
+      _key,
       author->{
+        _id,
         name,
-        username
-      }
+        username,
+        image
+      },
+      comment,
+      createdAt
+    },
+    likes[]->{
+      _id,
+      name,
+      username
     }
   }
 `;
@@ -135,17 +190,37 @@ export const GAMES_BY_AUTHOR_QUERY =
         category,
         image,
         comments[] {
+          _key,
           author->{
+            _id,
             name,
-            username
+            username,
+            image
           },
           comment,
           createdAt
         },
-        likes[] {
-          author->{
-            name,
-            username
-          }
+        likes[]->{
+          _id,
+          name,
+          username
         }
     }`);
+
+export const POST_BY_ID_QUERY = `
+  *[_type == "post" && _id == $id][0] {
+    _id,
+    title,
+    comments[]{
+      _key,
+      comment,
+      createdAt,
+      author->{
+        _id,
+        name,
+        username,
+        image
+      }
+    }
+  }
+`;

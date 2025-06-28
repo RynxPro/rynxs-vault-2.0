@@ -1,113 +1,208 @@
 "use client";
 
-import React, { useState } from "react";
 import { formatDate } from "@/lib/utils";
-import { urlFor } from "@/sanity/lib/image";
-import { HeartIcon } from "lucide-react";
-import { MessageSquare } from "lucide-react";
-import markdownit from "markdown-it";
-import { motion, AnimatePresence } from "framer-motion";
+import { EyeIcon, MessageCircleIcon, CalendarIcon, HeartIcon, Gamepad2Icon } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { Post, Author, Game } from "@/sanity/types";
+import { useState } from "react";
+import UserAvatar from "./UserAvatar";
 
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-});
+export type PostCardType = Omit<Post, "author" | "game"> & { 
+  author?: Author; 
+  game?: Game;
+};
 
-export default function PostList({ posts }: { posts: any[] }) {
-  return (
-    <>
-      <div className="flex flex-col space-y-8 py-8">
-        {posts.map((post) => (
-          <PostItem key={post._id} post={post} />
-        ))}
-      </div>
-    </>
-  );
-}
+const PostList = ({ posts }: { posts: PostCardType[] }) => {
+  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
 
-function PostItem({ post }: { post: any }) {
-  const [commentsVisible, setCommentsVisible] = useState(false);
-
-  const toggleComments = () => {
-    setCommentsVisible(!commentsVisible);
+  const handleImageError = (postId: string) => {
+    setImageErrors(prev => ({ ...prev, [postId]: true }));
   };
 
-  const parsedContent = md.render(post.content);
+  const getImageSrc = (image: any, postId: string) => {
+    if (imageErrors[postId]) {
+      return '/placeholder.png';
+    }
+    
+    // Handle both Sanity image objects and string URLs
+    if (typeof image === 'string') {
+      return image;
+    }
+    
+    if (image && typeof image === 'object' && image.asset) {
+      return image.asset.url || '/placeholder.png';
+    }
+    
+    return '/placeholder.png';
+  };
+
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="max-w-md mx-auto">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MessageCircleIcon className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No posts yet</h3>
+          <p className="text-gray-600 mb-6">
+            Be the first to share your thoughts about games!
+          </p>
+          <Link 
+            href="/post/upload"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 hover:scale-105 shadow-lg"
+          >
+            <MessageCircleIcon className="w-5 h-5" />
+            Create Your First Post
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white border-3 border-black rounded-2xl overflow-hidden shadow-xl w-full transition-transform hover:scale-[1.01] hover:shadow-2xl text-gray-800">
-      <div className="flex justify-between items-center px-4 py-2 text-sm text-gray-500">
-        <span>{formatDate(post._createdAt)}</span>
-      </div>
+    <div className="space-y-6">
+      {posts.map((post) => {
+        // Find the first comment with a valid _key
+        const firstValidComment = post.comments?.find(c => c._key);
+        return (
+          <article key={post._id} className="group">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              {/* Header */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    {/* Author and date */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <Link href={`/user/${post.author?._id}`} className="flex-shrink-0">
+                        <div className="relative">
+                          <UserAvatar
+                            image={post.author?.image || null}
+                            name={post.author?.name || "Unknown User"}
+                            size={32}
+                            className="h-8 w-8 border-2 border-gray-200 transition-all duration-200 group-hover:border-primary-500 group-hover:scale-105 shadow-md active:scale-95"
+                          />
+                          <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></div>
+                        </div>
+                      </Link>
+                      
+                      <div className="flex-1 min-w-0">
+                        <Link href={`/user/${post.author?._id}`}>
+                          <p className="text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition-colors truncate">
+                            {post.author?.name}
+                          </p>
+                        </Link>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <CalendarIcon className="w-3 h-3" />
+                          <time dateTime={post._createdAt} className="font-medium">
+                            {formatDate(post._createdAt)}
+                          </time>
+                        </div>
+                      </div>
+                    </div>
 
-      {post.image && (
-        <img
-          src={urlFor(post.image).url()}
-          alt={post.title}
-          className="w-full h-52 object-cover"
-        />
-      )}
+                    {/* Title */}
+                    <Link href={`/post/${post._id}`} className="block">
+                      <h2 className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2 mb-2">
+                        {post.title}
+                      </h2>
+                    </Link>
 
-      <div className="p-6 flex flex-col flex-grow">
-        <h4 className="text-2xl font-bold text-gray-900 mb-3">{post.title}</h4>
-        {parsedContent ? (
-          <article
-            className="prose max-w-4xl font-work-sans break-all"
-            dangerouslySetInnerHTML={{ __html: parsedContent }}
-          />
-        ) : (
-          <p className="no-result">No details provided</p>
-        )}
-      </div>
+                    {/* Game reference */}
+                    {post.game && (
+                      <Link href={`/game/${post.game._id}`} className="inline-block">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full hover:bg-primary-100 transition-colors">
+                          <Gamepad2Icon className="w-3 h-3" />
+                          About: {post.game.title}
+                        </span>
+                      </Link>
+                    )}
+                  </div>
 
-      <div className="flex justify-start gap-10 px-4 sm:px-6 md:px-8 lg:px-10 py-4 text-base text-gray-700 border-t-2 border-gray-300 font-medium">
-        <div
-          className="flex items-center gap-2 hover:text-red-500 cursor-pointer transition-transform hover:scale-110"
-          title="Like post"
-        >
-          <span>
-            <HeartIcon />
-          </span>
-          <span>{post.likes?.length || 0}</span>
-        </div>
-        <div
-          className="flex items-center gap-2 hover:text-blue-500 cursor-pointer transition-transform hover:scale-110"
-          title="View comments"
-        >
-          <span>
-            <MessageSquare />
-          </span>
-          <span onClick={toggleComments}>
-            {post.comments?.length || 0} Comments
-          </span>
-        </div>
-      </div>
-
-      {/* Comments section */}
-      <AnimatePresence>
-        {commentsVisible && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="px-6 py-4 bg-gray-50 border-t-2 border-gray-200 space-y-4 overflow-hidden"
-          >
-            {post.comments?.map((comment: any, index: number) => (
-              <div key={index} className="p-3 rounded-lg bg-white shadow">
-                <p className="text-xs text-gray-400">
-                  {formatDate(comment.createdAt)}
-                </p>
-                <p className="font-semibold text-sm text-gray-800">
-                  {comment.author?.name || comment.author?.username}
-                </p>
-                <p className="text-gray-700">{comment.comment}</p>
+                  {/* Post image */}
+                  {post.image && (
+                    <Link href={`/post/${post._id}`} className="flex-shrink-0">
+                      <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gray-100">
+                        <Image
+                          src={getImageSrc(post.image, post._id)}
+                          alt={`Image for ${post.title}`}
+                          fill
+                          className="object-cover transition-transform duration-300 group-hover:scale-110"
+                          onError={() => handleImageError(post._id)}
+                          sizes="96px"
+                          loading="lazy"
+                        />
+                      </div>
+                    </Link>
+                  )}
+                </div>
               </div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+              {/* Content */}
+              <div className="p-6">
+                <Link href={`/post/${post._id}`} className="block">
+                  <p className="text-gray-700 leading-relaxed line-clamp-3 mb-4">
+                    {post.content}
+                  </p>
+                </Link>
+
+                {/* Latest Comment Preview */}
+                {firstValidComment && (
+                  <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <div className="flex items-start gap-2">
+                      <UserAvatar
+                        image={typeof firstValidComment.author === "object" && firstValidComment.author && "image" in firstValidComment.author && typeof firstValidComment.author.image === "string" ? firstValidComment.author.image : ""}
+                        name={typeof firstValidComment.author === "object" && firstValidComment.author && "name" in firstValidComment.author && typeof firstValidComment.author.name === "string" ? firstValidComment.author.name : "Unknown"}
+                        size={24}
+                        className="flex-shrink-0 border border-gray-200"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-medium text-gray-900">
+                            {typeof firstValidComment.author === "object" && firstValidComment.author && "name" in firstValidComment.author && typeof firstValidComment.author.name === "string" ? firstValidComment.author.name : "Unknown"}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {firstValidComment.createdAt ? formatDate(firstValidComment.createdAt) : ""}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600 line-clamp-2">
+                          {firstValidComment.comment}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <div className="flex items-center gap-1.5">
+                      <HeartIcon className="w-4 h-4 text-red-500" />
+                      <span>{post.likes?.length || 0} likes</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <MessageCircleIcon className="w-4 h-4 text-blue-500" />
+                      <span>{post.comments?.length || 0} comments</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <EyeIcon className="w-4 h-4 text-gray-400" />
+                      <span>Read more</span>
+                    </div>
+                  </div>
+
+                  <Link href={`/post/${post._id}`}>
+                    <button className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-semibold rounded-lg hover:from-primary-600 hover:to-primary-700 transition-all duration-300 hover:scale-105 shadow-md active:scale-95">
+                      Read Post
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      })}
     </div>
   );
-}
+};
+
+export default PostList;
