@@ -11,8 +11,9 @@ import { notFound } from "next/navigation";
 import UserAvatar from "@/components/ui/UserAvatar";
 
 // Generate metadata for the page
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const game = await client.fetch(GAME_BY_ID_QUERY, { id: params.id });
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const game = await client.fetch(GAME_BY_ID_QUERY, { id });
   
   if (!game) {
     return {
@@ -39,8 +40,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-const page = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
 
   // Fetch game and posts data
   let game;
@@ -51,6 +52,49 @@ const page = async ({ params }: { params: { id: string } }) => {
     game = await client.fetch(GAME_BY_ID_QUERY, { id });
     if (game) {
       posts = await client.fetch(POSTS_BY_GAME_QUERY, { gameId: id });
+      
+      // Resolve comments for posts
+      if (posts.length > 0) {
+        // Get all comment references from all posts
+        const allCommentRefs = posts.flatMap((post: any) => 
+          post.comments?.map((comment: any) => comment._ref) || []
+        );
+        
+        if (allCommentRefs.length > 0) {
+          // Fetch all comment documents in one query
+          const comments = await client.fetch(`
+            *[_type == "comment" && _id in $commentRefs] {
+              _id,
+              comment,
+              createdAt,
+              author-> {
+                _id,
+                name,
+                username,
+                image
+              }
+            }
+          `, { commentRefs: allCommentRefs });
+          
+          // Create a map of comment ID to comment document
+          const commentMap = new Map();
+          comments.forEach((comment: any) => {
+            commentMap.set(comment._id, comment);
+          });
+          
+          // Resolve comments for each post
+          posts = posts.map((post: any) => ({
+            ...post,
+            comments: post.comments?.map((commentRef: any) => {
+              const comment = commentMap.get(commentRef._ref);
+              return comment ? {
+                ...comment,
+                _key: commentRef._key
+              } : null;
+            }).filter(Boolean) || []
+          }));
+        }
+      }
     }
   } catch (err) {
     error = err as Error;

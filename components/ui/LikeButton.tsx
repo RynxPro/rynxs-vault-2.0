@@ -25,7 +25,7 @@ const LikeButton = ({ postId, initialLikes, currentUser }: LikeButtonProps) => {
   useEffect(() => {
     // Check if current user has liked the post
     if (currentUser && initialLikes) {
-      const userLiked = initialLikes.some(like => like._id === currentUser.id);
+      const userLiked = initialLikes.some((like: Like) => like._id === currentUser.id);
       setIsLiked(userLiked);
     }
   }, [currentUser, initialLikes]);
@@ -38,29 +38,43 @@ const LikeButton = ({ postId, initialLikes, currentUser }: LikeButtonProps) => {
 
     setIsLiking(true);
     
+    // Optimistic update - update UI immediately
+    const optimisticLiked = !isLiked;
+    setIsLiked(optimisticLiked);
+    
+    if (optimisticLiked) {
+      // Add current user to likes optimistically
+      setLikes(prev => [...prev, { 
+        _id: currentUser.id, 
+        name: currentUser.user?.name || "You", 
+        username: currentUser.user?.username || "you" 
+      }]);
+    } else {
+      // Remove current user from likes optimistically
+      setLikes(prev => prev.filter(like => like._id !== currentUser.id));
+    }
+    
     try {
       const formData = new FormData();
       formData.append("postId", postId);
 
-      const result = await toggleLike({}, formData);
+      const result = await toggleLike(formData);
       
       if (result.status === "SUCCESS") {
-        // Update the likes state based on the result
-        if (result.liked) {
-          // Add current user to likes
+        // Success - keep the optimistic update
+        toast.success(optimisticLiked ? "Post liked!" : "Post unliked!");
+      } else {
+        // Revert optimistic update on error
+        setIsLiked(!optimisticLiked);
+        if (optimisticLiked) {
+          setLikes(prev => prev.filter(like => like._id !== currentUser.id));
+        } else {
           setLikes(prev => [...prev, { 
             _id: currentUser.id, 
             name: currentUser.user?.name || "You", 
             username: currentUser.user?.username || "you" 
           }]);
-          setIsLiked(true);
-        } else {
-          // Remove current user from likes
-          setLikes(prev => prev.filter(like => like._id !== currentUser.id));
-          setIsLiked(false);
         }
-        toast.success(result.liked ? "Post liked!" : "Post unliked!");
-      } else {
         throw new Error(result.error || "Failed to update like");
       }
     } catch (error) {

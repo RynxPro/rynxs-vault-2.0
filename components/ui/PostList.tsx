@@ -8,9 +8,24 @@ import { Post, Author, Game } from "@/sanity/types";
 import { useState } from "react";
 import UserAvatar from "./UserAvatar";
 
-export type PostCardType = Omit<Post, "author" | "game"> & { 
+// Custom type for resolved comments
+export type ResolvedComment = {
+  _id: string;
+  _key: string;
+  comment: string;
+  createdAt: string;
+  author?: {
+    _id: string;
+    name: string;
+    username: string;
+    image?: string;
+  };
+};
+
+export type PostCardType = Omit<Post, "author" | "game" | "comments"> & { 
   author?: Author; 
   game?: Game;
+  comments?: ResolvedComment[];
 };
 
 const PostList = ({ posts }: { posts: PostCardType[] }) => {
@@ -151,18 +166,18 @@ const PostList = ({ posts }: { posts: PostCardType[] }) => {
                   <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-start gap-2">
                       <UserAvatar
-                        image={typeof firstValidComment.author === "object" && firstValidComment.author && "image" in firstValidComment.author && typeof firstValidComment.author.image === "string" ? firstValidComment.author.image : ""}
-                        name={typeof firstValidComment.author === "object" && firstValidComment.author && "name" in firstValidComment.author && typeof firstValidComment.author.name === "string" ? firstValidComment.author.name : "Unknown"}
+                        image={firstValidComment.author?.image || null}
+                        name={firstValidComment.author?.name || "Unknown User"}
                         size={24}
                         className="flex-shrink-0 border border-gray-200"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-medium text-gray-900">
-                            {typeof firstValidComment.author === "object" && firstValidComment.author && "name" in firstValidComment.author && typeof firstValidComment.author.name === "string" ? firstValidComment.author.name : "Unknown"}
+                            {firstValidComment.author?.name || "Unknown User"}
                           </span>
                           <span className="text-xs text-gray-500">
-                            {firstValidComment.createdAt ? formatDate(firstValidComment.createdAt) : ""}
+                            {firstValidComment.createdAt ? formatDate(firstValidComment.createdAt) : "Unknown date"}
                           </span>
                         </div>
                         <p className="text-xs text-gray-600 line-clamp-2">
